@@ -1,16 +1,16 @@
-import { formatCurrency } from "../../utils/helpers";
-import Button from "../../ui/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { addItem, currentQuantitybyId } from "../cart/cartSlice";
-import DeleteItem from "../cart/DeleteItem";
-import UpdateItemQuantity from "../cart/UpdateItemQuantity";
+import { useDispatch, useSelector } from 'react-redux';
+import Button from '../../ui/Button';
+import DeleteItem from '../cart/DeleteItem';
+import UpdateItemQuantity from '../cart/UpdateItemQuantity';
+import { formatCurrency } from '../../utils/helpers';
+import { addItem, getCurrentQuantityById } from '../cart/cartSlice';
 
 function MenuItem({ pizza }) {
   const dispatch = useDispatch();
+
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
 
-  const currentQuantity = useSelector(currentQuantitybyId(id));
-
+  const currentQuantity = useSelector(getCurrentQuantityById(id));
   const isInCart = currentQuantity > 0;
 
   function handleAddToCart() {
@@ -27,14 +27,14 @@ function MenuItem({ pizza }) {
   return (
     <li className="flex gap-4 py-2">
       <img
-        className={`h-24 ${soldOut ? "Opacity-70 grayscale" : ""}`}
         src={imageUrl}
         alt={name}
+        className={`h-24 ${soldOut ? 'opacity-70 grayscale' : ''}`}
       />
-      <div className=" flex grow flex-col pt-0.5">
+      <div className="flex grow flex-col pt-0.5">
         <p className="font-medium">{name}</p>
         <p className="text-sm capitalize italic text-stone-500">
-          {ingredients.join(", ")}
+          {ingredients.join(', ')}
         </p>
         <div className="mt-auto flex items-center justify-between">
           {!soldOut ? (
@@ -44,8 +44,9 @@ function MenuItem({ pizza }) {
               Sold out
             </p>
           )}
+
           {isInCart && (
-            <div className="flex items-center justify-center  gap-3 sm:gap-8">
+            <div className="flex items-center gap-3 sm:gap-8">
               <UpdateItemQuantity
                 pizzaId={id}
                 currentQuantity={currentQuantity}
@@ -54,10 +55,9 @@ function MenuItem({ pizza }) {
             </div>
           )}
 
-          {!soldOut && (
-            <Button onClick={handleAddToCart} type="small">
-              {" "}
-              Add to Cart
+          {!soldOut && !isInCart && (
+            <Button type="small" onClick={handleAddToCart}>
+              Add to cart
             </Button>
           )}
         </div>

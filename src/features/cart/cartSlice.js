@@ -1,31 +1,46 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   cart: [],
+
+  // cart: [
+  //   {
+  //     pizzaId: 12,
+  //     name: 'Mediterranean',
+  //     quantity: 2,
+  //     unitPrice: 16,
+  //     totalPrice: 32,
+  //   },
+  // ],
 };
 
 const cartSlice = createSlice({
-  name: "cart",
+  name: 'cart',
   initialState,
   reducers: {
     addItem(state, action) {
+      // payload = newItem
       state.cart.push(action.payload);
     },
     deleteItem(state, action) {
+      // payload = pizzaId
       state.cart = state.cart.filter((item) => item.pizzaId !== action.payload);
     },
     increaseItemQuantity(state, action) {
+      // payload = pizzaId
       const item = state.cart.find((item) => item.pizzaId === action.payload);
+
       item.quantity++;
       item.totalPrice = item.quantity * item.unitPrice;
     },
     decreaseItemQuantity(state, action) {
+      // payload = pizzaId
       const item = state.cart.find((item) => item.pizzaId === action.payload);
+
       item.quantity--;
       item.totalPrice = item.quantity * item.unitPrice;
-      if (item.quantity === 0) {
-        cartSlice.caseReducers.deleteItem(state, action);
-      }
+
+      if (item.quantity === 0) cartSlice.caseReducers.deleteItem(state, action);
     },
     clearCart(state) {
       state.cart = [];
@@ -43,27 +58,15 @@ export const {
 
 export default cartSlice.reducer;
 
-// these below will create some performance issues use reselect library for performance
+export const getCart = (state) => state.cart.cart;
 
-export const getTotalCartQuantity = (store) => {
-  return store.cart.cart.reduce((sum, item) => item.quantity + sum, 0);
-};
-export const getTotalCartPrice = (store) => {
-  return store.cart.cart.reduce((sum, item) => item.totalPrice + sum, 0);
-};
+export const getTotalCartQuantity = (state) =>
+  state.cart.cart.reduce((sum, item) => sum + item.quantity, 0);
 
-/*
-when Jonas says we can use "reselect" library to optimize selectors, I was wondering if the following code can replace the "getTotalCartPrice" in the video and if it is correctly optimized . I tested the code and it works but I'm not sure if im using all correctly. So this is the code:
+export const getTotalCartPrice = (state) =>
+  state.cart.cart.reduce((sum, item) => sum + item.totalPrice, 0);
 
-export const selectTotalCartPrice = createSelector(     [state => state.cart.cart],     cart => cart.reduce((accumulator, item) => item.totalPrice + accumulator, 0) );
+export const getCurrentQuantityById = (id) => (state) =>
+  state.cart.cart.find((item) => item.pizzaId === id)?.quantity ?? 0;
 
-
-
-and the usage in CartOverview.jsx:
-const total = useSelector(selectTotalCartPrice);*/
-
-export const getCart = (store) => store.cart.cart;
-
-export const currentQuantitybyId = (id) => (store) => {
-  return store.cart.cart.find((item) => item.pizzaId === id)?.quantity ?? 0;
-};
+// 'reselect'
