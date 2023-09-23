@@ -4,8 +4,8 @@ Users can browse a menu of pizzas loaded from an API, add items to a cart, and p
 
 ## Table of Contents
 - [Features](#features)
-- [Tech Stack](#techstack)
-- [ScreenShots](#screenshot)
+- [Tech Stack](#Tech-Stack)
+- [ScreenShots](#ScreenShots)
 
 
 ## Features
